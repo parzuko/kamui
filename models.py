@@ -1,3 +1,5 @@
+import json
+
 class PriorityQueue:
     def __init__(self):
         self.collection = []
@@ -41,4 +43,25 @@ class MetroGraph:
         self.adjacency_list[source].append(
             {'node': destination, 'weight': weight, 'line': color})
 
-    
+    def print_graph(self, station):
+        print('Printing Graph')
+        for i in range(len(self.adjacency_list[station])):
+            print(self.adjacency_list[station][i].line)
+        
+
+    # def get_shortest_path(self, source, destination):
+    #     times = {}
+    #     change = []
+    #     backtrace = {}
+    #     foundS, foundD = 0,0
+    #     pq = PriorityQueue()
+    #     times[source] = 0
+
+    #     for node in self.nodes:
+    #         if node == source:
+    #             foundS = 1
+    #         if node == destination:
+    #             fonudD = 1
+
+    #         if node != source:
+    #             times[node] = float('inf')
