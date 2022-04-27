@@ -56,12 +56,10 @@ class MetroGraph:
 
     def print_graph(self, station):
         print('Printing Graph')
-        for i in range(len(self.adjacency_list[station])):
-            print(self.adjacency_list[station][i])
+        print(self.adjacency_list[station][0]['line'])
 
     def get_shortest_path(self, source, destination):
         times = {}
-        change = []
         backtrace = {}
         foundS, foundD = 0, 0
         pq = PriorityQueue()
@@ -127,28 +125,19 @@ class MetroGraph:
         last_step = destination
 
         while last_step != source:
-            # last_to_back = self.get_line(last_step, backtrace[last_step])
-            # back_last_to_last = self.get_line(
-            #     backtrace[last_step], backtrace[backtrace[last_step]])
+            current_station = backtrace[last_step]
+            
+            last_step = current_station
+            
+            current_line = self.adjacency_list[current_station][0]['line']
 
-            # if last_to_back != back_last_to_last:
-            #     # if backtrace[last_step] == source:
-            #     #     pass
-            #     # elif backtrace[last_step] == "Yamuna Bank" and last_step == "Indraprastha" and backtrace[backtrace[last_step]] == "Laxmi Nagar":
-            #     #     pass
-            #     # elif backtrace[last_step] == 'Yamuna Bank' and last_step == 'Laxmi Nagar' and backtrace[backtrace[last_step]] == 'Indraprastha':
-            #     #     pass
-            #     # elif backtrace[last_step] == 'Ashok Park Main' and last_step == 'Punjabi Bagh' and backtrace[backtrace[last_step]] == 'Satguru Ram Singh Marg':
-            #     #     pass
-            #     # elif backtrace[last_step] == 'Ashok Park Main' and last_step == 'Satguru Ram Singh Marg' and backtrace[backtrace[last_step]] == 'Punjabi Bagh':
-            #     #     pass
-            #     # else:
-            #     #     line1Send =
-            #     pass
-            # x[0:0] = y
-            # prepend array to start of another
-            path[0:0] =[backtrace[last_step]]
-            last_step = backtrace[last_step]
+            if current_line == "blue":
+                current_station += " 🔵"
+            elif current_line == "yellow":
+                current_station += " 🟡"
+            
+            path[0:0] = [current_station]
+            
 
         return [path, total_time]
 
