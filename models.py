@@ -1,6 +1,6 @@
 from collections import defaultdict
 import json
-from time import time
+
 
 class PriorityQueue:
     def __init__(self):
@@ -13,7 +13,7 @@ class PriorityQueue:
         return self.collection.pop(0)
 
     def enqueue(self, element):
-        if self.is_empty(self.collection):
+        if self.is_empty():
             self.collection.append(element)
             return
 
@@ -40,7 +40,7 @@ class MetroGraph:
             {'node': destination, 'weight': weight, 'line': color})
         self.adjacency_list[destination].append(
             {'node': source, 'weight': weight, 'line': color})
-    
+
     def insert_single_edge(self, source, destination, weight, color):
         self.adjacency_list[source].append(
             {'node': destination, 'weight': weight, 'line': color})
@@ -53,18 +53,17 @@ class MetroGraph:
         for i in range(len(self.adjacency_list[destination])):
             if self.adjacency_list[destination][i]['node'] == source:
                 return self.adjacency_list[source][i]['line']
-        
 
     def print_graph(self, station):
         print('Printing Graph')
         for i in range(len(self.adjacency_list[station])):
-            print(self.adjacency_list[station][i]['line'])
-        
+            print(self.adjacency_list[station][i])
+
     def get_shortest_path(self, source, destination):
         times = {}
         change = []
         backtrace = {}
-        foundS, foundD = 0,0
+        foundS, foundD = 0, 0
         pq = PriorityQueue()
         times[source] = 0
 
@@ -72,7 +71,7 @@ class MetroGraph:
             if node == source:
                 foundS = 1
             if node == destination:
-                fonudD = 1
+                foundD = 1
 
             if node != source:
                 times[node] = float('inf')
@@ -86,7 +85,6 @@ class MetroGraph:
         elif foundD == 0:
             print("Desitination invalid")
             return
-        
 
         pq.enqueue([source, 0])
 
@@ -97,10 +95,12 @@ class MetroGraph:
             for neighbour in self.adjacency_list[current_node]:
                 total_time = times[current_node] + neighbour['weight']
                 if current_node != source:
-                    
-                    current_to_neighbour = self.get_line(current_node, neighbour['node']) 
-                    current_to_back = self.get_line(current_node, backtrace[current_node])
-                    
+
+                    current_to_neighbour = self.get_line(
+                        current_node, neighbour['node'])
+                    current_to_back = self.get_line(
+                        current_node, backtrace[current_node])
+
                     if current_to_neighbour != current_to_back:
 
                         if current_node == "Yamuna Bank" and neighbour['node'] == "Indraprastha" and backtrace[current_node] == "Laxmi Nagar":
@@ -117,20 +117,85 @@ class MetroGraph:
                             pass
                         else:
                             total_time += 9
-                
-                if total_time < total_time[neighbour['node']]:
+
+                if total_time < times[neighbour['node']]:
                     times[neighbour['node']] = total_time
                     backtrace[neighbour['node']] = current_node
                     pq.enqueue([neighbour['node'], total_time])
 
+        path = [destination]
+        last_step = destination
+
+        while last_step != source:
+            # last_to_back = self.get_line(last_step, backtrace[last_step])
+            # back_last_to_last = self.get_line(
+            #     backtrace[last_step], backtrace[backtrace[last_step]])
+
+            # if last_to_back != back_last_to_last:
+            #     # if backtrace[last_step] == source:
+            #     #     pass
+            #     # elif backtrace[last_step] == "Yamuna Bank" and last_step == "Indraprastha" and backtrace[backtrace[last_step]] == "Laxmi Nagar":
+            #     #     pass
+            #     # elif backtrace[last_step] == 'Yamuna Bank' and last_step == 'Laxmi Nagar' and backtrace[backtrace[last_step]] == 'Indraprastha':
+            #     #     pass
+            #     # elif backtrace[last_step] == 'Ashok Park Main' and last_step == 'Punjabi Bagh' and backtrace[backtrace[last_step]] == 'Satguru Ram Singh Marg':
+            #     #     pass
+            #     # elif backtrace[last_step] == 'Ashok Park Main' and last_step == 'Satguru Ram Singh Marg' and backtrace[backtrace[last_step]] == 'Punjabi Bagh':
+            #     #     pass
+            #     # else:
+            #     #     line1Send =
+            #     pass
+            # x[0:0] = y
+            # prepend array to start of another
+            path[0:0] =[backtrace[last_step]]
+            last_step = backtrace[last_step]
+
+        return [path, total_time]
+
+
+
+
+# def populate_graph():
+#     # Blue line
+#     blueFile = open("routes/blue.json")
+#     blueline = json.load(blueFile)
+#     for station in blueline:
+#         g.insert_node(station)
+#     for i in range(len(blueline) - 1):
+#         g.insert_edge(blueline[i], blueline[i + 1], 2.02, "blue")
+
+
+#     # Yellow line
+#     yellowFile = open("routes/yellow.json")
+#     yellow_line = json.load(yellowFile)
+#     for station in yellow_line:
+#         if station == "hauz khas" or station == "rajiv chowk":
+#             continue
+#         g.insert_node(station)
+
+#     for i in range(len(yellow_line) - 1):
+#         g.insert_edge(yellow_line[i], yellow_line[i + 1], 2.22, "yellow")
+
 
 g = MetroGraph()
-g.insert_edge("dhaula kuan", "durgabai deshmukh south campus", 18, "1.2km Skywalk")
+blueFile = open("routes/blue.json")
+blueline = json.load(blueFile)
+for station in blueline:
+    g.insert_node(station)
+for i in range(len(blueline) - 1):
+    g.insert_edge(blueline[i], blueline[i + 1], 2.02, "blue")
 
-g.insert_edge("noida sector 52", "noida sector 51", 12, "300m Walkway/Free e-Rickshaw")
 
+# Yellow line
+yellowFile = open("routes/yellow.json")
+yellow_line = json.load(yellowFile)
+for station in yellow_line:
+    if station == "rajiv chowk":
+        continue
+    g.insert_node(station)
 
-g.insert_single_edge("phase 3", "phase 2", 5.2, "rapid")
-g.insert_single_edge("phase 2", "vodafone belvedere towers", 5.2, "rapid")
+for i in range(len(yellow_line) - 1):
+    g.insert_edge(yellow_line[i], yellow_line[i + 1], 2.22, "yellow")
 
-g.print_graph("phase 3")
+print(g.get_shortest_path("jahangirpuri", "noida city centre"))
+# g.print_graph("rajiv chowk")
