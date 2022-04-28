@@ -304,8 +304,4 @@ class MetroGraph:
         return [path, time_weight_hashmap[destination]]
 
 
-g = MetroGraph()
-g.populate_graph()
-
-print(g.get_shortest_path("jahangirpuri", "noida city centre"))
-
+# https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
