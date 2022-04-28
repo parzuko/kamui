@@ -71,10 +71,9 @@ class MetroGraph:
         for i in range(len(self.adjacency_list[destination])):
             if self.adjacency_list[destination][i]['node'] == source:
                 return self.adjacency_list[destination][i]['line']
-
-    def print_graph(self, station):
-        print('Printing Graph')
-        print(self.adjacency_list[station])
+    
+    def get_station_line(self, current_station):
+        return self.adjacency_list[current_station][0]['line']
 
     def populate_graph(self):
         # Add Blue Line
@@ -239,55 +238,45 @@ class MetroGraph:
         return
 
     def get_shortest_path(self, source, destination):
-        times = {}
-        backtrace = {}
-        foundS, foundD = 0, 0
-        pq = PriorityQueue()
-        times[source] = 0
-
-        for node in self.nodes:
-            if node == source:
-                foundS = 1
-            if node == destination:
-                foundD = 1
-
-            if node != source:
-                times[node] = float('inf')
-
-        if foundS == 0 and foundD == 0:
+        if source not in self.nodes and destination not in self.nodes:
             print("Both Invalid")
             return
-        elif foundS == 0:
+        elif source not in self.nodes:
             print("Source invalid")
             return
-        elif foundD == 0:
+        elif destination not in self.nodes:
             print("Desitination invalid")
             return
-
+        
+        pq = PriorityQueue()
+        time_weight_hashmap = {}
+        bracktrack_stored_nodes = {}
+        
         pq.enqueue([source, 0])
+        time_weight_hashmap[source] = 0
 
         while not pq.is_empty():
             shortest_step = pq.dequeue()
             current_node = shortest_step[0]
 
             for neighbour in self.adjacency_list[current_node]:
-                total_time = times[current_node] + neighbour['weight']
+                total_time = time_weight_hashmap[current_node] + neighbour['weight']
                 if current_node != source:
 
                     current_to_neighbour = self.get_line(
                         current_node, neighbour['node'])
                     current_to_back = self.get_line(
-                        current_node, backtrace[current_node])
+                        current_node, bracktrack_stored_nodes[current_node])
 
                     if current_to_neighbour != current_to_back:
 
-                        if current_node == "Yamuna Bank" and neighbour['node'] == "Indraprastha" and backtrace[current_node] == "Laxmi Nagar":
+                        if current_node == "Yamuna Bank" and neighbour['node'] == "Indraprastha" and bracktrack_stored_nodes[current_node] == "Laxmi Nagar":
                             pass
-                        elif current_node == "Yamuna Bank" and neighbour['node'] == "Laxmi Nagar" and backtrace[current_node] == "Indraprastha":
+                        elif current_node == "Yamuna Bank" and neighbour['node'] == "Laxmi Nagar" and bracktrack_stored_nodes[current_node] == "Indraprastha":
                             pass
-                        elif current_node == "Ashok Park Main" and neighbour['node'] == "Punjabi Bagh" and backtrace[current_node] == "Satguru Ram Singh Marg":
+                        elif current_node == "Ashok Park Main" and neighbour['node'] == "Punjabi Bagh" and bracktrack_stored_nodes[current_node] == "Satguru Ram Singh Marg":
                             pass
-                        elif current_node == "Ashok Park Main" and neighbour['node'] == "Satguru Ram Singh Marg" and backtrace[current_node] == "Punjabi Bagh":
+                        elif current_node == "Ashok Park Main" and neighbour['node'] == "Satguru Ram Singh Marg" and bracktrack_stored_nodes[current_node] == "Punjabi Bagh":
                             pass
                         elif current_to_neighbour == "1.2km Skywalk" or current_to_back == "1.2km Skywalk":
                             pass
@@ -296,26 +285,27 @@ class MetroGraph:
                         else:
                             total_time += 9
 
-                if total_time < times[neighbour['node']]:
-                    times[neighbour['node']] = total_time
-                    backtrace[neighbour['node']] = current_node
+                if total_time < time_weight_hashmap[neighbour['node']]:
+                    time_weight_hashmap[neighbour['node']] = total_time
+                    bracktrack_stored_nodes[neighbour['node']] = current_node
                     pq.enqueue([neighbour['node'], total_time])
 
         path = [destination]
         last_step = destination
 
         while last_step != source:
-            current_station = backtrace[last_step]
+            current_station = bracktrack_stored_nodes[last_step]
 
             last_step = current_station
-            # current_line = self.adjacency_list[current_station][0]['line']
+            current_line = self.get_station_line(current_station)
+            # Add to the start of the list
             path[0:0] = [current_station]
 
-        return [path, total_time]
+        return [path, time_weight_hashmap[destination]]
 
 
 g = MetroGraph()
 g.populate_graph()
 
-print(g.get_shortest_path("jahangirpuri", "indraprastha"))
+print(g.get_shortest_path("jahangirpuri", "noida city centre"))
 
