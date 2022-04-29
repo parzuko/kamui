@@ -71,10 +71,10 @@ class MetroGraph:
         for i in range(len(self.adjacency_list[destination])):
             if self.adjacency_list[destination][i]['node'] == source:
                 return self.adjacency_list[destination][i]['line']
-    
+
     def get_station_line(self, current_station):
         line_color = self.adjacency_list[current_station][0]['line']
-        
+
         if line_color == "orange":
             return "🟠"
         if line_color == "yellow":
@@ -163,7 +163,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(green_line) - 1):
-            self.insert_edge(green_line[i], green_line[i + 1], self.GREEN_TIME, "green")
+            self.insert_edge(
+                green_line[i], green_line[i + 1], self.GREEN_TIME, "green")
 
         # Add Green Branch
         with open("routes/greenbranch.json") as file:
@@ -173,7 +174,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(green_branch) - 1):
-            self.insert_edge(green_branch[i], green_branch[i + 1], self.GREEN_BRANCH_TIME, "green_branch")
+            self.insert_edge(
+                green_branch[i], green_branch[i + 1], self.GREEN_BRANCH_TIME, "green_branch")
 
         # Add Pink Line
         with open("routes/pink.json") as file:
@@ -183,7 +185,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(pink_line) - 1):
-            self.insert_edge(pink_line[i], pink_line[i + 1], self.PINK_TIME, "pink")
+            self.insert_edge(
+                pink_line[i], pink_line[i + 1], self.PINK_TIME, "pink")
 
         # Add Pink Branch
         with open("routes/pinkbranch.json") as file:
@@ -193,7 +196,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(pink_branch) - 1):
-            self.insert_edge(pink_branch[i], pink_branch[i + 1], self.PINK_BRANCH_TIME, "pink_branch")
+            self.insert_edge(
+                pink_branch[i], pink_branch[i + 1], self.PINK_BRANCH_TIME, "pink_branch")
 
         # Add Orange Line
         with open("routes/orange.json") as file:
@@ -203,7 +207,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(orange_line) - 1):
-            self.insert_edge(orange_line[i], orange_line[i + 1], self.ORANGE_TIME, "orange")
+            self.insert_edge(
+                orange_line[i], orange_line[i + 1], self.ORANGE_TIME, "orange")
 
         # Add Aqua Line
         with open("routes/aqua.json") as file:
@@ -211,7 +216,8 @@ class MetroGraph:
         for station in aqua_line:
             self.insert_node(station)
         for i in range(len(aqua_line) - 1):
-            self.insert_edge(aqua_line[i], aqua_line[i + 1], self.AQUA_TIME, "aqua")
+            self.insert_edge(
+                aqua_line[i], aqua_line[i + 1], self.AQUA_TIME, "aqua")
 
         # Add Grey Line
         with open("routes/grey.json") as file:
@@ -221,7 +227,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(grey_line) - 1):
-            self.insert_edge(grey_line[i], grey_line[i + 1], self.GREY_TIME, "grey")
+            self.insert_edge(
+                grey_line[i], grey_line[i + 1], self.GREY_TIME, "grey")
 
         # Add Rapid Line
         with open("routes/rapid.json") as file:
@@ -231,7 +238,8 @@ class MetroGraph:
                 continue
             self.insert_node(station)
         for i in range(len(rapid_line) - 1):
-            self.insert_edge(rapid_line[i], rapid_line[i + 1], self.RAPID_TIME, "rapid")
+            self.insert_edge(
+                rapid_line[i], rapid_line[i + 1], self.RAPID_TIME, "rapid")
 
         # Add Rapid Loop
         with open("routes/rapidloop.json") as file:
@@ -239,17 +247,21 @@ class MetroGraph:
         for station in rapid_loop:
             self.insert_node(station)
         for i in range(len(rapid_loop) - 1):
-            self.insert_edge(rapid_loop[i], rapid_loop[i + 1], self.RAPID_TIME, "rapidloop")
+            self.insert_edge(
+                rapid_loop[i], rapid_loop[i + 1], self.RAPID_TIME, "rapidloop")
 
-        #Dhaula Kuan - South Campus Connection
-        self.insert_edge("dhaula kuan", "durgabai deshmukh south campus", 18, "1.2km Skywalk");
+        # Dhaula Kuan - South Campus Connection
+        self.insert_edge(
+            "dhaula kuan", "durgabai deshmukh south campus", 18, "1.2km Skywalk")
 
         # Noida Sec 52 - Noida Sec 51
-        self.insert_edge("noida sector 52", "noida sector 51", 12, "300m Walkway/Free e-Rickshaw");
+        self.insert_edge("noida sector 52", "noida sector 51",
+                         12, "300m Walkway/Free e-Rickshaw")
 
         # Aqua Line Looper
-        self.insert_single_edge("phase 3", "phase 2", 5.2, "rapid");
-        self.insert_single_edge("phase 2", "vodafone belvedere towers", 5.2, "rapid");
+        self.insert_single_edge("phase 3", "phase 2", 5.2, "rapid")
+        self.insert_single_edge(
+            "phase 2", "vodafone belvedere towers", 5.2, "rapid")
         return
 
     # Djikstra's Algorithm
@@ -263,7 +275,7 @@ class MetroGraph:
         elif destination not in self.nodes:
             print("Desitination invalid")
             return
-        
+
         pq = PriorityQueue()
         time_weight_hashmap = {}
         bracktrack_stored_nodes = {}
@@ -274,14 +286,14 @@ class MetroGraph:
         for node in self.nodes:
             if node != source:
                 time_weight_hashmap[node] = float('inf')
-        
 
         while not pq.is_empty():
             shortest_step = pq.dequeue()
             current_node = shortest_step[0]
 
             for neighbour in self.adjacency_list[current_node]:
-                total_time = time_weight_hashmap[current_node] + neighbour['weight']
+                total_time = time_weight_hashmap[current_node] + \
+                    neighbour['weight']
                 if current_node != source:
 
                     current_to_neighbour = self.get_line(
@@ -304,7 +316,7 @@ class MetroGraph:
                         elif current_to_neighbour == "300m Walkway/Free e-Rickshaw" or current_to_back == "300m Walkway/Free e-Rickshaw":
                             pass
                         else:
-                            total_time += 9
+                            total_time += 15
 
                 if total_time < time_weight_hashmap[neighbour['node']]:
                     time_weight_hashmap[neighbour['node']] = total_time
