@@ -73,7 +73,22 @@ class MetroGraph:
                 return self.adjacency_list[destination][i]['line']
     
     def get_station_line(self, current_station):
-        return self.adjacency_list[current_station][0]['line']
+        line_color = self.adjacency_list[current_station][0]['line']
+        
+        if line_color == "orange":
+            return "🟠"
+        if line_color == "yellow":
+            return "🟡"
+        if line_color == "blue" or line_color == "aqua" or line_color == "blue_branch":
+            return "🔵"
+        if line_color == "green" or line_color == "green_branch":
+            return "🟢"
+        if line_color == "grey" or line_color == "rapid":
+            return "⚫️"
+        if line_color == "magenta" or line_color == "violet":
+            return "🟣"
+        if line_color == "pink" or line_color == "pink_branch" or line_color == "red":
+            return "🔴"
 
     def populate_graph(self):
         # Add Blue Line
@@ -237,6 +252,7 @@ class MetroGraph:
         self.insert_single_edge("phase 2", "vodafone belvedere towers", 5.2, "rapid");
         return
 
+    # Djikstra's Algorithm
     def get_shortest_path(self, source, destination):
         if source not in self.nodes and destination not in self.nodes:
             print("Both Invalid")
@@ -251,9 +267,14 @@ class MetroGraph:
         pq = PriorityQueue()
         time_weight_hashmap = {}
         bracktrack_stored_nodes = {}
-        
+
         pq.enqueue([source, 0])
         time_weight_hashmap[source] = 0
+
+        for node in self.nodes:
+            if node != source:
+                time_weight_hashmap[node] = float('inf')
+        
 
         while not pq.is_empty():
             shortest_step = pq.dequeue()
@@ -302,6 +323,3 @@ class MetroGraph:
             path[0:0] = [current_station]
 
         return [path, time_weight_hashmap[destination]]
-
-
-# https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
