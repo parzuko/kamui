@@ -5,7 +5,8 @@ Get the shortest path between two metro stations!
 ## :thinking: How It Works?
 You can add `Kamui` to your discord server using [this link](https://discord.com/api/oauth2/authorize?client_id=969337544221270106&permissions=156766816320&scope=bot%20applications.commands)
 
-[Demo video here!]
+![kamui](https://user-images.githubusercontent.com/57803819/166148661-2a8a3de9-69d0-483c-9836-0dbe26fca368.gif)
+
 
 Kamui is based on Dijkstra's algorithm.
 
