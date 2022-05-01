@@ -33,8 +33,8 @@ class MyModal(discord.ui.Modal):
         source = self.children[0].value.lower()
         destination = self.children[1].value.lower()
         embed = discord.Embed(
-            title="Kamui! We got the shortest path!",
-            description=f"Shortest path from {source.capitalize()} to {destination.capitalize()}",
+            title="Mangekyou Sharingan!",
+            description=f"We got the shortest path from {source.capitalize()} to {destination.capitalize()}",
             color=discord.Colour.random(),
         )
         
@@ -43,7 +43,7 @@ class MyModal(discord.ui.Modal):
         
         embed.set_author(name="Kamui", icon_url=kamui_url)
         embed.add_field(name="Shortest Path", value=(" → ").join(styled_shortest_path))
-        embed.set_footer(text=f"This route will take{int(duration)} minutes!")
+        embed.set_footer(text=f"This route will take {int(duration)} minutes!")
 
         await interaction.response.send_message(embeds=[embed])
 
