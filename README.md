@@ -21,7 +21,7 @@ git clone https://github.com/parzuko/kamui.git
 cd kamui
 
 # Setup Your Personal Tokens
-echo >> "TOKEN=<YOUR_TOKEN>" >> .env
+echo >> "BOT_TOKEN=<YOUR_TOKEN>" >> .env
 
 # Install pipenv
 pip install pipenv
